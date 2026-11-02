@@ -61,8 +61,8 @@ describe("schema", () => {
     }
     const powai = p.workLocation.find((w) => w.name === LOCATIONS.powai.name)!;
     expect(powai.address.postalCode).toBe("400076");
-    expect(powai.openingHoursSpecification.map((h) => [h.opens, h.closes])).toEqual([["16:00", "17:30"], ["15:00", "16:00"]]);
-    expect(powai.openingHoursSpecification.map((h) => [h.validFrom, h.validThrough])).toEqual([[undefined, "2026-10-31"], ["2026-11-01", undefined]]);
+    expect(powai.openingHoursSpecification.map((h) => [h.opens, h.closes])).toEqual([["15:00", "16:00"]]);
+    expect(JSON.stringify(powai.openingHoursSpecification)).not.toMatch(/validFrom|validThrough|17:30/);
     const nahar = p.workLocation.find((w) => w.name === LOCATIONS.nahar.name)!;
     expect(nahar.address.postalCode).toBe("400072");
     expect(nahar.openingHoursSpecification.map((h) => [h.opens, h.closes])).toEqual([
