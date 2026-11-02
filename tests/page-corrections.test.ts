@@ -36,22 +36,22 @@ describe("About cards grid", () => {
   });
 });
 
-describe("Powai timing (dated, two lines)", () => {
-  it("Contact card shows the old and new lines from the same config", () => {
+describe("Powai timing (single line)", () => {
+  it("Contact card shows only the current line", () => {
     const html = renderToStaticMarkup(createElement(Timings, { loc: LOCATIONS.powai }));
-    expect(html).toContain("Until 31 October 2026: Monday to Saturday, 4:00 pm to 5:30 pm");
-    expect(html).toContain("From 1 November 2026: Monday to Saturday, 3:00 pm to 4:00 pm");
+    expect(html).toContain("Monday to Saturday: 3:00 pm to 4:00 pm");
+    expect(html).not.toMatch(/Until 31 October|From 1 November/);
   });
-  it("old time text lives only in the removable `previous` block of site.ts", () => {
+  it('"4:00 pm to 5:30 pm" and dated-timing leftovers appear nowhere in src or README', () => {
     const walk = (d: string): string[] => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(`${d}/${e.name}`) : [`${d}/${e.name}`]));
-    for (const f of [...walk("src"), "README.md"].filter((f) => f !== "src/config/site.ts")) {
-      const t = read(f);
-      expect(t, f).not.toMatch(/4:00 pm to 5:30|5:30 pm|"17:30"|From 1 November/);
+    for (const f of [...walk("src"), "README.md"]) {
+      expect(read(f), f).not.toMatch(/4:00 pm to 5:30|5:30 pm|"17:30"|From 1 November|Until 31 October|validThrough/);
     }
-    expect(read("src/config/site.ts")).toContain("Remove after 31 Oct 2026");
   });
-  it("Kanjurmarg and Nahar unchanged", () => {
-    expect(LOCATIONS.main.weekly.previous).toBeUndefined();
-    expect(LOCATIONS.nahar.weekly.previous).toBeUndefined();
+  it("no dated-timing fields on any location", () => {
+    for (const l of Object.values(LOCATIONS)) {
+      expect(l.weekly).not.toHaveProperty("previous");
+      expect(l.weekly).not.toHaveProperty("effective");
+    }
   });
 });

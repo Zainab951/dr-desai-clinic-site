@@ -91,10 +91,6 @@ export type Location = {
     text: string;
     /** Machine hours for Mon-Sat (JSON-LD openingHoursSpecification). */
     slots: readonly Slot[];
-    /** Optional dated change: `text`/`slots` above are the new timing; this labels it and sets JSON-LD validFrom. */
-    effective?: { label: string; validFrom: string };
-    /** Optional timing being replaced; shown as its own line and exported with JSON-LD validThrough. */
-    previous?: { label: string; text: string; slots: readonly Slot[]; validThrough: string };
   };
   /** Only an appointment note is ever shown or exported; "none" shows nothing (never "closed"). */
   sunday: { status: "appointment"; text: string } | { status: "none" };
@@ -189,12 +185,8 @@ export const LOCATIONS: Record<Location["slug"], Location> = {
     weekly: {
       days: "Monday to Saturday",
       daysShort: "Mon to Sat",
-      // New timing effective 2026-11-01, per doctor.
       text: "3:00 pm to 4:00 pm",
       slots: [{ opens: "15:00", closes: "16:00" }],
-      effective: { label: "From 1 November 2026", validFrom: "2026-11-01" },
-      // Remove after 31 Oct 2026: delete this `previous` block (and the `effective` label above if only one line should remain).
-      previous: { label: "Until 31 October 2026", text: "4:00 pm to 5:30 pm", slots: [{ opens: "16:00", closes: "17:30" }], validThrough: "2026-10-31" },
     },
     sunday: { status: "none" },
     fee: "₹500",
@@ -202,11 +194,10 @@ export const LOCATIONS: Record<Location["slug"], Location> = {
   },
 };
 
-/** Mon-Sat timing lines for display. One line normally; two dated lines while `weekly.previous` is set. */
+/** Mon-Sat timing line for display. */
 export function timingLines(loc: Location): string[] {
   const w = loc.weekly;
-  if (!w.previous || !w.effective) return [`${w.days}: ${w.text}`];
-  return [`${w.previous.label}: ${w.days}, ${w.previous.text}`, `${w.effective.label}: ${w.days}, ${w.text}`];
+  return [`${w.days}: ${w.text}`];
 }
 
 export const MAIN = LOCATIONS.main;

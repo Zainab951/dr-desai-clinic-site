@@ -15,10 +15,7 @@ describe("locations (single source of truth)", () => {
     expect(LOCATIONS.nahar.address.oneLine).toBe("Nahar Amrit Shakti, off Saki Vihar Road, Chandivali, Andheri East, Mumbai 400072");
     expect(LOCATIONS.main.weekly.text).toBe("9:30 am to 11:30 am and 8:00 pm to 10:00 pm");
     expect(LOCATIONS.powai.weekly.text).toBe("3:00 pm to 4:00 pm");
-    expect(timingLines(LOCATIONS.powai)).toEqual([
-      "Until 31 October 2026: Monday to Saturday, 4:00 pm to 5:30 pm",
-      "From 1 November 2026: Monday to Saturday, 3:00 pm to 4:00 pm",
-    ]);
+    expect(timingLines(LOCATIONS.powai)).toEqual(["Monday to Saturday: 3:00 pm to 4:00 pm"]);
     expect(timingLines(LOCATIONS.main)).toEqual(["Monday to Saturday: 9:30 am to 11:30 am and 8:00 pm to 10:00 pm"]);
     expect(timingLines(LOCATIONS.nahar)).toEqual(["Monday to Saturday: 12:00 pm to 2:00 pm and 6:00 pm to 7:30 pm"]);
     expect(LOCATIONS.nahar.weekly.text).toBe("12:00 pm to 2:00 pm and 6:00 pm to 7:30 pm");
