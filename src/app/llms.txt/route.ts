@@ -1,4 +1,4 @@
-import { ALL_LOCATIONS, timingLines, FEES, MAIN, MMC, PHONE, SITE } from "@/config/site";
+import { ALL_LOCATIONS, FEES, MAIN, MMC, PHONE, SITE } from "@/config/site";
 
 export const dynamic = "force-static";
 
@@ -6,7 +6,7 @@ export const dynamic = "force-static";
 export function GET() {
   const locations = ALL_LOCATIONS.map((l) => {
     const sunday = l.sunday.status === "appointment" ? `; Sunday: ${l.sunday.text}` : "";
-    return `- ${l.name}: ${l.address.oneLine}. ${l.weekly.previous ? timingLines(l).join("; ") : `${l.weekly.days}, ${l.weekly.text}`}${sunday}`;
+    return `- ${l.name}: ${l.address.oneLine}. ${l.weekly.days}, ${l.weekly.text}${sunday}`;
   }).join("\n");
   const body = `# ${SITE.clinicName}
 
