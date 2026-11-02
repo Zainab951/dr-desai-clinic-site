@@ -16,21 +16,40 @@ describe("About Me", () => {
   it("config holds exactly the 3 doctor paragraphs, verbatim", () => {
     expect([...ABOUT_ME]).toEqual([P1, P2, P3]);
   });
-  it("all 3 paragraphs appear verbatim on /about, in order, below the 5 cards and above Our approach", () => {
-    const at = [P1, P2, P3].map((p) => html.indexOf(`>${p}</p>`));
-    at.forEach((i) => expect(i).toBeGreaterThan(-1));
-    expect(at).toEqual([...at].sort((a, b) => a - b));
-    expect(html.indexOf("About Me")).toBeGreaterThan(html.lastIndexOf("Currently pursuing"));
-    expect(html.indexOf("About Me")).toBeLessThan(html.indexOf("Our approach"));
+  it("DOM order: heading, para A, para B, tags, About Me, P1, P2, P3, cards, Our approach", () => {
+    const A = "Consultant Physician and Diabetologist, MBBS, FCPS Medicine (Rajawadi Hospital, Mumbai), CCGDM (PHFI Chennai).";
+    const A2 = "Registered with the Maharashtra Medical Council (MMC), Reg. No. 2016040659.";
+    const B = "Consults at Dr. Desai's Health Clinic and Diabetes Center, focused on clear explanations and treatment plans built around each patient's daily routine.";
+    expect(html).toContain(`>${B}</p>`);
+    expect(html).toContain(A);
+    expect(html).toContain(A2);
+    expect(html).toContain("6 years in internal medicine, with a focus on diabetes management.");
+    const order = [
+      html.indexOf("A clinic built around clear, patient-first care"),
+      html.indexOf(A),
+      html.indexOf(`>${B}</p>`),
+      html.indexOf(">Diabetes</li>"),
+      html.indexOf(">General Medicine</li>"),
+      html.indexOf(">About Me</h2>"),
+      html.indexOf(`>${P1}</p>`),
+      html.indexOf(`>${P2}</p>`),
+      html.indexOf(`>${P3}</p>`),
+      html.indexOf("data-about-cards"),
+      html.indexOf("Our approach"),
+    ];
+    order.forEach((i) => expect(i).toBeGreaterThan(-1));
+    expect(order).toEqual([...order].sort((x, y) => x - y));
   });
-  it("hero is as on production: heading, intro incl. Consults-at line, tags, photo box", () => {
-    expect(html).toContain("A clinic built around clear, patient-first care");
-    expect(html).toContain("Consults at Dr. Desai's Health Clinic and Diabetes Center, focused on clear explanations and treatment plans built around each patient's daily routine.");
-    expect(html).toContain("Diabetes</li>");
-    expect(html).toContain("General Medicine</li>");
-    expect(html.indexOf("A clinic built around")).toBeLessThan(html.indexOf("About Me"));
-    expect(html).toContain('data-slot-id="about-doctor"');
-    expect(html).toContain("aspect-ratio:396 / 405");
+  it("About Me lives in the same column as the intro (no sibling block above or below the photo)", () => {
+    const photo = html.indexOf('data-slot-id="about-doctor"');
+    expect(photo).toBeGreaterThan(-1);
+    expect(photo).toBeLessThan(html.indexOf("A clinic built around"));
+    expect(html.indexOf("data-about-me")).toBeGreaterThan(html.indexOf(">General Medicine</li>"));
+    expect(html.indexOf("data-about-me")).toBeLessThan(html.indexOf("data-about-cards"));
+  });
+  it("photo frame ratio matches the file (800x1200), object-cover", () => {
+    expect(html).toContain("aspect-ratio:800 / 1200");
+    expect(html).toContain('class="object-cover"');
   });
   it("copy is not hardcoded in the page component", () => {
     expect(fs.readFileSync("src/app/about/page.tsx", "utf8")).not.toContain("After completing my training");

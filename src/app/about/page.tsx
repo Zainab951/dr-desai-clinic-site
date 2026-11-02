@@ -34,7 +34,7 @@ export default function AboutPage() {
       <section className="bg-cream py-10">
         <div className="container-page">
           <div className="fx-reveal grid gap-6 md:grid-cols-[180px_1fr] md:gap-10 lg:grid-cols-[240px_1fr]">
-            <div className="mx-auto w-[180px] lg:w-[240px]">
+            <div className="mx-auto w-[180px] self-start lg:w-[240px]">
               <ImageSlot slot="about-doctor" rounded="rounded-[10px]" className="border-[4px] border-teal-800" priority />
             </div>
             <div>
@@ -50,6 +50,12 @@ export default function AboutPage() {
                   <li key={t} className="rounded-md border border-line bg-white px-3 py-1.5 text-[16px] font-bold text-teal-800">{t}</li>
                 ))}
               </ul>
+              <div className="mt-8" data-about-me>
+                <h2 className="text-h2 font-bold">About Me</h2>
+                {ABOUT_ME.map((p) => (
+                  <p key={p} className="mt-3 text-lead text-body">{p}</p>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -62,13 +68,6 @@ export default function AboutPage() {
               </li>
             ))}
           </ul>
-
-          <div className="fx-reveal mx-auto mt-8 max-w-3xl" data-about-me>
-            <h2 className="text-h2 font-bold">About Me</h2>
-            {ABOUT_ME.map((p) => (
-              <p key={p} className="mt-3 text-lead text-body">{p}</p>
-            ))}
-          </div>
 
           <div className="fx-reveal mt-6 rounded-[10px] border border-line bg-note p-5">
             <h2 className="text-[20px] font-bold">Our approach</h2>
