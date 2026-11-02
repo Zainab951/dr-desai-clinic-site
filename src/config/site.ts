@@ -23,6 +23,13 @@ export const MMC = {
   number: "2016040659",
 } as const;
 
+/** "About Me" copy on /about, word for word as written by the doctor. Single source: do not copy into components. */
+export const ABOUT_ME: readonly string[] = [
+  "After completing my training, I worked as a Consultant Physician in Karad, my native place, for a year, with the aim of serving the local community. I later worked at Synergy Multispeciality Hospital, Miraj, gaining valuable clinical experience in rural Maharashtra. After around four years of practice in Maharashtra, I decided to return to Mumbai, my birthplace, and establish my own clinic.",
+  "I started Dr. Desai's Health Clinic and Diabetes Center in Kanjurmarg with the vision of making quality general medical care and specialised diabetes management more accessible to the local community. Recognising the need for accessible healthcare and dedicated diabetology services in the area, I wanted to create a clinic where patients could receive personalised, affordable and comprehensive medical care close to home.",
+  "While my clinic was under development, I worked at Powai Polyclinic & Hospital and Nahar Medical Centre, Chandivali. This experience helped me understand the healthcare needs of Mumbai's densely populated communities, the challenges patients face in accessing medical care, and the importance of accessible, reliable physician services.",
+];
+
 /**
  * The ONE phone number. Enforced by scripts/check-phone.mjs + tests/phone.test.ts.
  * NOTE: +91 88305 31546 belongs to the Kanjurmarg clinic ONLY. The doctor has a no-promotion clause with

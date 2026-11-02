@@ -2,7 +2,7 @@ import { ImageSlot } from "@/components/ImageSlot";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CallButton } from "@/components/Buttons";
 import { BuildingIcon, CalendarIcon, CapIcon, ClockIcon, ScrollIcon } from "@/components/Icons";
-import { EXPERIENCE, MMC, SITE } from "@/config/site";
+import { ABOUT_ME, EXPERIENCE, MMC, SITE } from "@/config/site";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
@@ -33,6 +33,12 @@ export default function AboutPage() {
 
       <section className="bg-cream py-10">
         <div className="container-page">
+          <div className="fx-reveal mx-auto mb-8 max-w-3xl" data-about-me>
+            <h2 className="text-h2 font-bold">About Me</h2>
+            {ABOUT_ME.map((p) => (
+              <p key={p} className="mt-3 text-lead text-body">{p}</p>
+            ))}
+          </div>
           <div className="fx-reveal grid gap-6 md:grid-cols-[180px_1fr] md:gap-10 lg:grid-cols-[240px_1fr]">
             <div className="mx-auto w-[180px] lg:w-[240px]">
               <ImageSlot slot="about-doctor" rounded="rounded-[10px]" className="border-[4px] border-teal-800" priority />
@@ -41,9 +47,6 @@ export default function AboutPage() {
               <h2 className="text-h2 font-bold">A clinic built around clear, patient-first care</h2>
               <p className="mt-3 text-lead text-body">
                 Consultant Physician and Diabetologist, MBBS, FCPS Medicine (Rajawadi Hospital, Mumbai), CCGDM (PHFI Chennai). {EXPERIENCE.years} years in internal medicine, with a focus on diabetes management. Registered with the Maharashtra Medical Council (MMC), Reg. No. {MMC.number}.
-              </p>
-              <p className="mt-3 text-lead text-body">
-                Consults at {SITE.clinicName}, focused on clear explanations and treatment plans built around each patient&apos;s daily routine.
               </p>
               <ul className="mt-4 flex flex-wrap gap-2">
                 {["Diabetes", "General Medicine"].map((t) => (
