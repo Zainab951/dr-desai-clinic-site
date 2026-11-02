@@ -16,17 +16,21 @@ describe("About Me", () => {
   it("config holds exactly the 3 doctor paragraphs, verbatim", () => {
     expect([...ABOUT_ME]).toEqual([P1, P2, P3]);
   });
-  it("all 3 paragraphs appear verbatim on /about, in order, under the hero", () => {
+  it("all 3 paragraphs appear verbatim on /about, in order, below the 5 cards and above Our approach", () => {
     const at = [P1, P2, P3].map((p) => html.indexOf(`>${p}</p>`));
     at.forEach((i) => expect(i).toBeGreaterThan(-1));
     expect(at).toEqual([...at].sort((a, b) => a - b));
-    expect(html.indexOf("About Me")).toBeGreaterThan(html.indexOf("</h1>"));
-    expect(html.indexOf("About Me")).toBeLessThan(html.indexOf("A clinic built around clear, patient-first care"));
+    expect(html.indexOf("About Me")).toBeGreaterThan(html.lastIndexOf("Currently pursuing"));
+    expect(html.indexOf("About Me")).toBeLessThan(html.indexOf("Our approach"));
   });
-  it("credentials, 5 cards and Our approach are kept", () => {
-    expect(html).toContain("6 years in internal medicine");
-    expect(html).toContain("Our approach");
-    expect(html.match(/<li class="fx-card/g)).toHaveLength(5);
+  it("hero is as on production: heading, intro incl. Consults-at line, tags, photo box", () => {
+    expect(html).toContain("A clinic built around clear, patient-first care");
+    expect(html).toContain("Consults at Dr. Desai's Health Clinic and Diabetes Center, focused on clear explanations and treatment plans built around each patient's daily routine.");
+    expect(html).toContain("Diabetes</li>");
+    expect(html).toContain("General Medicine</li>");
+    expect(html.indexOf("A clinic built around")).toBeLessThan(html.indexOf("About Me"));
+    expect(html).toContain('data-slot-id="about-doctor"');
+    expect(html).toContain("aspect-ratio:396 / 405");
   });
   it("copy is not hardcoded in the page component", () => {
     expect(fs.readFileSync("src/app/about/page.tsx", "utf8")).not.toContain("After completing my training");
