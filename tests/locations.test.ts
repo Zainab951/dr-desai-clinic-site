@@ -45,12 +45,14 @@ describe("locations (single source of truth)", () => {
     expect([LOCATIONS.powai.lat, LOCATIONS.powai.lng]).toEqual([19.1240698, 72.9164363]);
   });
 
-  it("Pancholi has no coordinates or short map link; its embed and directions use the address as the query", () => {
+  it("Pancholi: no coordinates or short map link; embed is the owner-supplied pb URL; directions use the address", () => {
     const addr = LOCATIONS.pancholi.address.oneLine;
     expect([LOCATIONS.pancholi.lat, LOCATIONS.pancholi.lng]).toEqual([undefined, undefined]);
     expect(LOCATIONS.pancholi.mapsUrl).toBeUndefined();
-    expect(LOCATIONS.pancholi.mapsEmbedSrc).toBeUndefined();
-    expect(MAP.embedUrl(LOCATIONS.pancholi)).toBe(`https://www.google.com/maps?q=${encodeURIComponent(addr)}&output=embed`);
+    expect(LOCATIONS.pancholi.mapsEmbedSrc).toBe("https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2911.539646226586!2d72.90322777381644!3d19.074155852033364!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c625c5b56f45%3A0x6083c510e533025e!2sPancholi%20Hospital!5e1!3m2!1sen!2sin!4v1793691594837!5m2!1sen!2sin");
+    expect(MAP.embedUrl(LOCATIONS.pancholi)).toBe("https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2911.539646226586!2d72.90322777381644!3d19.074155852033364!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c625c5b56f45%3A0x6083c510e533025e!2sPancholi%20Hospital!5e1!3m2!1sen!2sin!4v1793691594837!5m2!1sen!2sin");
+    expect(MAP.embedUrl(LOCATIONS.pancholi)).toContain("/maps/embed?pb=");
+    expect(MAP.embedUrl(LOCATIONS.pancholi)).not.toMatch(/q=|output=embed/);
     expect(directionsLink(LOCATIONS.pancholi)).toBe(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(addr)}`);
     expect(new URL(directionsLink(LOCATIONS.pancholi)).searchParams.get("destination")).toBe(addr);
   });
@@ -85,16 +87,16 @@ describe("locations (single source of truth)", () => {
       expect(new URL(u).protocol).toBe("https:");
     }
     for (const l of withEmbed) {
-      const u = MAP.embedUrl(l);
+      const u = MAP.embedUrl(l)!;
       expect(u.length).toBeGreaterThan(20);
       expect(new URL(u).protocol).toBe("https:");
     }
-    expect(withEmbed.map((l) => l.slug)).toEqual(["main", "powai", "nahar"]);
+    expect(withEmbed.map((l) => l.slug)).toEqual(["main", "pancholi", "powai", "nahar"]);
   });
 
-  it("embed falls back to an address query for a location without mapsEmbedSrc; mapsUrl no longer drives directions", () => {
+  it("no address-query fallback: a location without mapsEmbedSrc has no embed; mapsUrl no longer drives directions", () => {
     const bare = { ...LOCATIONS.powai, mapsEmbedSrc: undefined };
-    expect(MAP.embedUrl(bare)).toContain("output=embed");
+    expect(MAP.embedUrl(bare)).toBeUndefined();
     const withLinks = { ...LOCATIONS.powai, mapsUrl: "https://maps.app.goo.gl/example" };
     expect(directionsLink(withLinks)).toBe(directionsLink(LOCATIONS.powai));
   });
@@ -110,7 +112,7 @@ describe("locations (single source of truth)", () => {
     expect(LOCATIONS.powai.mapsEmbedSrc).toContain("Powai%20Polyclinic");
     expect(withMapLinks.length).toBe(3);
     expect(new Set(withMapLinks.map((l) => l.mapsUrl)).size).toBe(3);
-    expect(new Set(withEmbed.map((l) => l.mapsEmbedSrc)).size).toBe(3);
+    expect(new Set(withEmbed.map((l) => l.mapsEmbedSrc)).size).toBe(4);
   });
 
   it("no maps/search links anywhere in src", () => {

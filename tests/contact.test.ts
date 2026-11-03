@@ -98,7 +98,7 @@ describe("Google Maps wiring on Contact", () => {
     expect(tags).toHaveLength(4);
     expect(tags.map((t) => decode(/ src="([^"]*)"/.exec(t)![1]))).toEqual(ALL_LOCATIONS.map((l) => MAP.embedUrl(l)));
     expect(html.match(/h-\[250px\]/g)).toHaveLength(4);
-    expect(decode(tags[1])).toContain("https://www.google.com/maps?q=90%20Feet%20Rd");
+    expect(decode(tags[1])).toContain("https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2911.539646226586");
     for (const t of tags) {
       expect(t).toMatch(/ title="[^"]+"/);
       expect(t).toContain('loading="lazy"');
