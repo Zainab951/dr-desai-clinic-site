@@ -23,6 +23,13 @@ export const MMC = {
   number: "2016040659",
 } as const;
 
+/** "About Me" copy on /about, word for word as written by the doctor. Single source: do not copy into components. */
+export const ABOUT_ME: readonly string[] = [
+  "After completing my training, I worked as a Consultant Physician in Karad, my native place, for a year, with the aim of serving the local community. I later worked at Synergy Multispeciality Hospital, Miraj, gaining valuable clinical experience in rural Maharashtra. After around four years of practice in Maharashtra, I decided to return to Mumbai, my birthplace, and establish my own clinic.",
+  "I started Dr. Desai's Health Clinic and Diabetes Center in Kanjurmarg with the vision of making quality general medical care and specialised diabetes management more accessible to the local community. Recognising the need for accessible healthcare and dedicated diabetology services in the area, I wanted to create a clinic where patients could receive personalised, affordable and comprehensive medical care close to home.",
+  "While my clinic was under development, I worked at Powai Polyclinic & Hospital and Nahar Medical Centre, Chandivali. This experience helped me understand the healthcare needs of Mumbai's densely populated communities, the challenges patients face in accessing medical care, and the importance of accessible, reliable physician services.",
+];
+
 /**
  * The ONE phone number. Enforced by scripts/check-phone.mjs + tests/phone.test.ts.
  * NOTE: +91 88305 31546 belongs to the Kanjurmarg clinic ONLY. The doctor has a no-promotion clause with
@@ -283,12 +290,12 @@ export const SIZES_CARD_3 = "(min-width: 1700px) 982px, (min-width: 1360px) 822p
 const SIZES_CARD_ZOOM = "(min-width: 1700px) 801px, (min-width: 1360px) 669px, (min-width: 1024px) calc(1.1 * (100vw - 144px) / 2), (min-width: 640px) calc(1.1 * (100vw - 80px)), calc(2.2 * (100vw - 40px))";
 const SIZES_BANNER = "(min-width: 1700px) 3008px, (min-width: 1360px) 2528px, (min-width: 1024px) calc(2 * (100vw - 96px)), (min-width: 640px) calc(2 * (100vw - 64px)), calc(2 * (100vw - 40px))";
 const SIZES_HERO = "(min-width: 1280px) 744px, (min-width: 1024px) 624px, (min-width: 768px) 424px, 404px"; // 372 / 312 / 212 / 202px inside the 4px frame
-const SIZES_ABOUT = "(min-width: 1024px) 464px, 344px"; // 240px (lg) / 180px box, minus the 4px frame
+const SIZES_ABOUT = "(min-width: 1024px) 240px, 180px"; // rendered frame: 240px at lg, 180px below (border sits inside the box)
 const SIZES_LOGO = "100px"; // fixed 52px box, 50px inside the 1px border
 
 export const IMAGE_SLOTS: ImageSlotDef[] = [
   { id: "home-hero", page: "Home", name: "Hero doctor photo", label: "Doctor photo", file: "doctor/hero-doctor.jpg", width: 540, height: 618, position: "center", alt: `Portrait of ${SITE.doctorName}, ${SITE.doctorTitle}`, sizes: SIZES_HERO, quality: 90 },
-  { id: "about-doctor", page: "About", name: "About doctor photo", label: "Doctor photo", file: "doctor/about-doctor.jpg", width: 396, height: 405, position: "center 0%", alt: `${SITE.doctorName} at the consulting desk`, sizes: SIZES_ABOUT, quality: 90 },
+  { id: "about-doctor", page: "About", name: "About doctor photo", label: "Doctor photo", file: "doctor/about-doctor.jpg", width: 800, height: 1200, position: "center 0%", alt: `${SITE.doctorName} at the consulting desk`, sizes: SIZES_ABOUT, quality: 90 },
   { id: "services-banner", page: "Services", name: "Services banner", label: "Services banner photo", file: "banners/services-banner.jpg", width: 1480, height: 326, position: "center", alt: "Doctor checking a patient's blood pressure", sizes: SIZES_BANNER, quality: 85 },
   { id: "svc-diabetes", page: "Home, Services", name: "Service card: Diabetes Management & Insulin Therapy", label: "Diabetes", file: "services/diabetes-management.jpg", width: 525, height: 204, position: "center", alt: "Glucometer and insulin pen for diabetes management", sizes: SIZES_CARD, quality: 85 },
   { id: "svc-gdm", page: "Home, Services", name: "Service card: Gestational Diabetes (GDM)", label: "Gestational", file: "services/gestational-diabetes.jpg", width: 525, height: 204, position: "center", alt: "Pregnant woman checking blood sugar for gestational diabetes", sizes: SIZES_CARD, quality: 85 },
