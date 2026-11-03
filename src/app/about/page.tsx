@@ -48,11 +48,6 @@ export default function AboutPage() {
               <p className="mt-3 text-lead text-body">
                 Consults at {SITE.clinicName}, focused on clear explanations and treatment plans built around each patient&apos;s daily routine.
               </p>
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {["Diabetes", "General Medicine"].map((t) => (
-                  <li key={t} className="rounded-md border border-line bg-white px-3 py-1.5 text-[16px] font-bold text-teal-800">{t}</li>
-                ))}
-              </ul>
             </div>
           </div>
 

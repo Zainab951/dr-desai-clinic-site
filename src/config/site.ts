@@ -290,7 +290,7 @@ export const SIZES_CARD_3 = "(min-width: 1700px) 982px, (min-width: 1360px) 822p
 const SIZES_CARD_ZOOM = "(min-width: 1700px) 801px, (min-width: 1360px) 669px, (min-width: 1024px) calc(1.1 * (100vw - 144px) / 2), (min-width: 640px) calc(1.1 * (100vw - 80px)), calc(2.2 * (100vw - 40px))";
 const SIZES_BANNER = "(min-width: 1700px) 3008px, (min-width: 1360px) 2528px, (min-width: 1024px) calc(2 * (100vw - 96px)), (min-width: 640px) calc(2 * (100vw - 64px)), calc(2 * (100vw - 40px))";
 const SIZES_HERO = "(min-width: 1280px) 744px, (min-width: 1024px) 624px, (min-width: 768px) 424px, 404px"; // 372 / 312 / 212 / 202px inside the 4px frame
-const SIZES_ABOUT = "(min-width: 1024px) 464px, 344px"; // 240px (lg) / 180px box, minus the 4px frame
+const SIZES_ABOUT = "(min-width: 1024px) 240px, 180px"; // rendered frame: 240px at lg, 180px below (border sits inside the box)
 const SIZES_LOGO = "100px"; // fixed 52px box, 50px inside the 1px border
 
 export const IMAGE_SLOTS: ImageSlotDef[] = [

@@ -25,7 +25,7 @@ describe("About page layout", () => {
     expect([...ABOUT_ME]).toEqual([P1, P2, P3]);
   });
 
-  it("DOM order: photo, name, credentials, role, divider, para A, para B, tags, About Me, P1, P2, P3, cards, Our approach", () => {
+  it("DOM order: photo, name, credentials, role, divider, para A, para B, About Me, P1, P2, P3, cards, Our approach", () => {
     const order = [
       pos('data-slot-id="about-doctor"'),
       pos(">Dr. Samruddha Desai</h2>"),
@@ -34,8 +34,6 @@ describe("About page layout", () => {
       pos("<hr"),
       pos(`>${A}</p>`),
       pos(`>${B}</p>`),
-      pos(">Diabetes</li>"),
-      pos(">General Medicine</li>"),
       pos("data-about-me"),
       pos(">About Me</h2>"),
       pos(`>${P1}</p>`),
@@ -48,7 +46,7 @@ describe("About page layout", () => {
   });
 
   it("About Me is full width: after the photo/text grid, before the 5 cards", () => {
-    const gridEnd = pos(">General Medicine</li>");
+    const gridEnd = pos(`>${B}</p>`);
     expect(pos("data-about-me")).toBeGreaterThan(gridEnd);
     expect(pos("data-about-me")).toBeLessThan(pos("data-about-cards"));
   });
