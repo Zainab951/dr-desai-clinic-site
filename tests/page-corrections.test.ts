@@ -39,7 +39,7 @@ describe("About cards grid", () => {
 describe("Powai timing (single line)", () => {
   it("Contact card shows only the current line", () => {
     const html = renderToStaticMarkup(createElement(Timings, { loc: LOCATIONS.powai }));
-    expect(html).toContain("Monday to Saturday: 3:00 pm to 4:00 pm");
+    expect(html).toContain("Monday to Saturday: 3:00 PM to 4:00 PM");
     expect(html).not.toMatch(/Until 31 October|From 1 November/);
   });
   it('"4:00 pm to 5:30 pm" and dated-timing leftovers appear nowhere in src or README', () => {

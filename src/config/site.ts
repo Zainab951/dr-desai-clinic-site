@@ -63,7 +63,7 @@ export function gmailComposeLink(subject: string = EMAIL_SUBJECT) {
 export type Slot = { opens: string; closes: string };
 
 export type Location = {
-  slug: "main" | "nahar" | "powai";
+  slug: "main" | "pancholi" | "nahar" | "powai";
   name: string;
   /** Call + WhatsApp booking actions allowed on this location's card? Kanjurmarg clinic only (see PHONE note). */
   bookable: boolean;
@@ -71,9 +71,9 @@ export type Location = {
   mapsUrl?: string;
   /** Optional Google Maps embed src for the iframe. Falls back to an address query embed when unset. */
   mapsEmbedSrc?: string;
-  /** Coordinates: Get Directions destination; the main clinic's also feed GeoCoordinates in the clinic JSON-LD. */
-  lat: number;
-  lng: number;
+  /** Coordinates: Get Directions destination; the main clinic's also feed GeoCoordinates in the clinic JSON-LD. Optional: no Get Directions button without them. */
+  lat?: number;
+  lng?: number;
   /** Short place label for copy, e.g. "Powai". */
   place: string;
   address: {
@@ -94,7 +94,7 @@ export type Location = {
     days: string;
     /** Short form for compact UI, e.g. "Mon to Sat". */
     daysShort: string;
-    /** Human text, e.g. "9:30 am to 11:30 am and 8:00 pm to 10:00 pm". */
+    /** Human text, e.g. "9:30 AM to 11:30 AM and 8:00 PM to 10:00 PM". */
     text: string;
     /** Machine hours for Mon-Sat (JSON-LD openingHoursSpecification). */
     slots: readonly Slot[];
@@ -130,11 +130,35 @@ export const LOCATIONS: Record<Location["slug"], Location> = {
     weekly: {
       days: "Monday to Saturday",
       daysShort: "Mon to Sat",
-      text: "9:30 am to 11:30 am and 8:00 pm to 10:00 pm",
+      text: "9:30 AM to 11:30 AM and 8:00 PM to 10:00 PM",
       slots: [
         { opens: "09:30", closes: "11:30" },
         { opens: "20:00", closes: "22:00" },
       ],
+    },
+    sunday: { status: "none" },
+  },
+  pancholi: {
+    slug: "pancholi",
+    bookable: false,
+    name: "Pancholi Hospital",
+    place: "Ghatkopar East",
+    mapsEmbedSrc: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2911.539646226586!2d72.90322777381644!3d19.074155852033364!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c625c5b56f45%3A0x6083c510e533025e!2sPancholi%20Hospital!5e1!3m2!1sen!2sin!4v1793691594837!5m2!1sen!2sin",
+    address: {
+      lines: ["90 Feet Rd, Sudarshan Society, Garodia Nagar", "Ghatkopar East, Mumbai, Maharashtra 400077"],
+      street: "90 Feet Rd, Sudarshan Society, Garodia Nagar",
+      locality: "Ghatkopar East",
+      city: "Mumbai",
+      region: "Maharashtra",
+      postalCode: "400077",
+      country: "IN",
+      oneLine: "90 Feet Rd, Sudarshan Society, Garodia Nagar, Ghatkopar East, Mumbai, Maharashtra 400077",
+    },
+    weekly: {
+      days: "Monday to Saturday",
+      daysShort: "Mon to Sat",
+      text: "12:00 PM to 2:00 PM",
+      slots: [{ opens: "12:00", closes: "14:00" }],
     },
     sunday: { status: "none" },
   },
@@ -160,13 +184,10 @@ export const LOCATIONS: Record<Location["slug"], Location> = {
     weekly: {
       days: "Monday to Saturday",
       daysShort: "Mon to Sat",
-      text: "12:00 pm to 2:00 pm and 6:00 pm to 7:30 pm",
-      slots: [
-        { opens: "12:00", closes: "14:00" },
-        { opens: "18:00", closes: "19:30" },
-      ],
+      text: "4:00 PM to 7:30 PM",
+      slots: [{ opens: "16:00", closes: "19:30" }],
     },
-    sunday: { status: "appointment", text: "By appointment only, 11:00 am to 1:00 pm" },
+    sunday: { status: "appointment", text: "11:00 AM to 1:00 PM, by appointment only" },
     fee: "₹1,100",
     distance: "~6 km from clinic",
   },
@@ -192,7 +213,7 @@ export const LOCATIONS: Record<Location["slug"], Location> = {
     weekly: {
       days: "Monday to Saturday",
       daysShort: "Mon to Sat",
-      text: "3:00 pm to 4:00 pm",
+      text: "3:00 PM to 4:00 PM",
       slots: [{ opens: "15:00", closes: "16:00" }],
     },
     sunday: { status: "none" },
@@ -209,17 +230,20 @@ export function timingLines(loc: Location): string[] {
 
 export const MAIN = LOCATIONS.main;
 /** Display order on Contact & Visit Us (matches the mockup: 01 Nahar, 02 Powai). */
-export const BRANCHES: Location[] = [LOCATIONS.nahar, LOCATIONS.powai];
+export const BRANCHES: Location[] = [LOCATIONS.pancholi, LOCATIONS.powai, LOCATIONS.nahar];
 export const ALL_LOCATIONS: Location[] = [LOCATIONS.main, ...BRANCHES];
 
 /** Get Directions: coordinate-based Google Maps directions link (one helper, no API key). */
-export function directionsLink(loc: Location) {
-  return `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}`;
+export function directionsLink(loc: Location): string {
+  if (loc.lat !== undefined && loc.lng !== undefined) return `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}`;
+  // No coordinates yet (Pancholi): address-based directions, owner-approved.
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(loc.address.oneLine)}`;
 }
 
 export const MAP = {
   title: "Map showing Dr. Desai's Health Clinic and Diabetes Center, opposite Runwal Bliss, Kanjurmarg East, Mumbai",
-  embedUrl: (loc: Location) => loc.mapsEmbedSrc ?? "https://www.google.com/maps?q=" + encodeURIComponent(loc.address.oneLine) + "&output=embed",
+  /** The location's own embed src; no address-query fallback. Undefined means no iframe is rendered. */
+  embedUrl: (loc: Location): string | undefined => loc.mapsEmbedSrc,
 };
 
 /** SOCIAL LINKS: exactly these two (confirmed). Both go into JSON-LD sameAs. No other platform may be added. */
