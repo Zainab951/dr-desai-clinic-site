@@ -54,9 +54,11 @@ export default function ContactPage() {
           <ul className="fx-grid mt-4 grid gap-4 sm:grid-cols-2">
             {BRANCHES.map((b, i) => (
               <li key={b.slug} className="fx-card flex flex-col overflow-hidden rounded-[10px] border border-line bg-white" data-location={b.slug}>
-                <div className="relative w-full" style={{ aspectRatio: "213 / 88" }}>
-                  <iframe title={`Map showing ${b.name}, ${b.place}, Mumbai`} src={MAP.embedUrl(b)} className="absolute inset-0 h-full w-full border-0" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
-                </div>
+                {b.mapsEmbedSrc && (
+                  <div className="relative w-full" style={{ aspectRatio: "213 / 88" }}>
+                    <iframe title={`Map showing ${b.name}, ${b.place}, Mumbai`} src={MAP.embedUrl(b)} className="absolute inset-0 h-full w-full border-0" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+                  </div>
+                )}
                 <div className="flex flex-1 flex-col p-4">
                   <span className="mb-1 inline-block w-fit rounded-full bg-teal-950 px-2.5 py-0.5 text-[13px] font-bold text-mint">0{i + 1}</span>
                   <h3 className="text-[18px] font-bold leading-snug">{b.name}</h3>
@@ -65,7 +67,7 @@ export default function ContactPage() {
                   </address>
                   <h4 className="mt-3 flex items-center gap-2 text-[16px] font-bold"><ClockIcon className="h-4 w-4 text-teal-800" />Timings</h4>
                   <Timings loc={b} />
-                  <p className="mt-2 text-[16px] leading-[1.6] text-body">Fee {b.fee} · {b.distance}</p>
+                  {b.fee && <p className="mt-2 text-[16px] leading-[1.6] text-body">Fee {b.fee}{b.distance ? ` · ${b.distance}` : ""}</p>}
                   <div className="mt-auto"><LocationActions loc={b} /></div>
                 </div>
               </li>

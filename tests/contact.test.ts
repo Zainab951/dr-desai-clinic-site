@@ -14,8 +14,9 @@ const read = (f: string) => fs.readFileSync(f, "utf8");
 const html = renderToStaticMarkup(createElement(ContactPage));
 const at = (marker: string) => html.indexOf(marker);
 const mainSeg = html.slice(at('data-location="main"'), at("Also consults at"));
-const naharSeg = html.slice(at('data-location="nahar"'), at('data-location="powai"'));
+const naharSeg = html.slice(at('data-location="nahar"'), html.indexOf("</section>", at('data-location="nahar"')));
 const powaiSeg = html.slice(at('data-location="powai"'), html.indexOf("</section>", at('data-location="powai"')));
+const pancholiSeg = html.slice(at('data-location="pancholi"'), at('data-location="powai"'));
 
 describe("email", () => {
   it("one shared helper builds the mailto with the appointment subject", () => {
@@ -95,7 +96,7 @@ describe("Google Maps wiring on Contact", () => {
   it("renders 3 lazy iframes with the real embed src, a title and referrerPolicy", () => {
     const tags = [...html.matchAll(/<iframe\b[^>]*>/g)].map((m) => m[0]);
     expect(tags).toHaveLength(3);
-    expect(tags.map((t) => decode(/ src="([^"]*)"/.exec(t)![1]))).toEqual(ALL_LOCATIONS.map((l) => l.mapsEmbedSrc));
+    expect(tags.map((t) => decode(/ src="([^"]*)"/.exec(t)![1]))).toEqual(ALL_LOCATIONS.filter((l) => l.mapsEmbedSrc).map((l) => l.mapsEmbedSrc));
     for (const t of tags) {
       expect(t).toMatch(/ title="[^"]+"/);
       expect(t).toContain('loading="lazy"');
@@ -103,10 +104,19 @@ describe("Google Maps wiring on Contact", () => {
     }
   });
 
-  it("renders 3 Get Directions links using the coordinate-based directions link", () => {
+  it("renders 3 Get Directions links (Pancholi has none yet) using the coordinate-based directions link", () => {
     const anchors = [...html.matchAll(/<a\b[^>]*data-cta="directions"[^>]*>/g)].map((m) => m[0]);
     expect(anchors).toHaveLength(3);
-    expect(anchors.map((a) => decode(/ href="([^"]*)"/.exec(a)![1]))).toEqual(ALL_LOCATIONS.map(directionsLink));
+    expect(anchors.map((a) => decode(/ href="([^"]*)"/.exec(a)![1]))).toEqual(ALL_LOCATIONS.map(directionsLink).filter((h): h is string => h !== null));
     for (const a of anchors) expect(a).toContain('rel="noopener noreferrer"');
+  });
+
+  it("Pancholi card: name, plain address, timings; no phone, WhatsApp, Call, directions, map or photo", () => {
+    expect(pancholiSeg).toContain("Pancholi Hospital");
+    expect(pancholiSeg).toContain("90 Feet Rd, Sudarshan Society, Garodia Nagar");
+    expect(pancholiSeg).toContain("Monday to Saturday: 12:00 PM to 2:00 PM");
+    expect(pancholiSeg).not.toMatch(/tel:|wa\.me|<iframe|data-cta=|data-location-actions|Get Directions|Fee /);
+    expect(html.indexOf('data-location="pancholi"')).toBeLessThan(html.indexOf('data-location="powai"'));
+    expect(html.indexOf('data-location="powai"')).toBeLessThan(html.indexOf('data-location="nahar"'));
   });
 });

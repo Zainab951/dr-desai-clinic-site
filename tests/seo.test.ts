@@ -65,15 +65,13 @@ describe("schema", () => {
     expect(JSON.stringify(powai.openingHoursSpecification)).not.toMatch(/validFrom|validThrough|17:30/);
     const nahar = p.workLocation.find((w) => w.name === LOCATIONS.nahar.name)!;
     expect(nahar.address.postalCode).toBe("400072");
-    expect(nahar.openingHoursSpecification.map((h) => [h.opens, h.closes])).toEqual([
-      ["12:00", "14:00"],
-      ["18:00", "19:30"],
-    ]);
+    expect(nahar.openingHoursSpecification.map((h) => [h.opens, h.closes])).toEqual([["16:00", "19:30"]]);
+    expect(p.workLocation.map((w) => w.name)).toEqual(["Pancholi Hospital", LOCATIONS.powai.name, LOCATIONS.nahar.name]);
   });
 
   it("Nahar Sunday is a text note, never openingHours; main Sunday absent", () => {
     const nahar = physicianSchema().workLocation.find((w) => w.name === LOCATIONS.nahar.name)!;
-    expect("description" in nahar && nahar.description).toContain("By appointment only, 11:00 am to 1:00 pm");
+    expect("description" in nahar && nahar.description).toContain("11:00 AM to 1:00 PM, by appointment only");
     const specs = JSON.stringify([clinicSchema().openingHoursSpecification, ...physicianSchema().workLocation.map((w) => w.openingHoursSpecification)]);
     expect(specs).not.toMatch(/Sunday/);
     expect(JSON.stringify(clinicSchema())).not.toMatch(/Sunday/);

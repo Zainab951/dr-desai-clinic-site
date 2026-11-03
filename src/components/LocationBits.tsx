@@ -19,6 +19,8 @@ const btn = "fx-btn inline-flex min-h-[44px] items-center justify-center gap-1.5
  * +91 88305 31546 belongs to the Kanjurmarg clinic only; the doctor has a no-promotion clause with Nahar.
  */
 export function LocationActions({ loc }: { loc: Location }) {
+  const directions = directionsLink(loc);
+  if (!loc.bookable && !directions) return null;
   return (
     <div className="mt-4 grid grid-cols-2 gap-2" data-location-actions={loc.slug}>
       {loc.bookable && (
@@ -27,10 +29,12 @@ export function LocationActions({ loc }: { loc: Location }) {
           Book on WhatsApp
         </a>
       )}
-      <a href={directionsLink(loc)} target="_blank" rel="noopener noreferrer" className={`${btn} ${loc.bookable ? "" : "col-span-2"} border border-teal-800 bg-white text-teal-800 hover:bg-teal-50`} data-cta="directions">
-        <DirectionsIcon className="h-[18px] w-[18px]" />
-        Get Directions
-      </a>
+      {directions && (
+        <a href={directions} target="_blank" rel="noopener noreferrer" className={`${btn} ${loc.bookable ? "" : "col-span-2"} border border-teal-800 bg-white text-teal-800 hover:bg-teal-50`} data-cta="directions">
+          <DirectionsIcon className="h-[18px] w-[18px]" />
+          Get Directions
+        </a>
+      )}
       {loc.bookable && (
         <a href={telHref} className={`${btn} border border-teal-800 bg-white text-teal-800 hover:bg-teal-50`} data-cta="call">
           <PhoneIcon className="h-[18px] w-[18px]" />

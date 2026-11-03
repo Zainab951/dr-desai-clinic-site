@@ -32,13 +32,13 @@ describe("Home content rules", () => {
 describe("Sunday display", () => {
   it("main clinic shows Mon to Sat only: no Sunday line, no 'closed', no placeholder", () => {
     const html = renderToStaticMarkup(createElement(Timings, { loc: LOCATIONS.main }));
-    expect(html).toContain("Monday to Saturday: 9:30 am to 11:30 am and 8:00 pm to 10:00 pm");
+    expect(html).toContain("Monday to Saturday: 9:30 AM to 11:30 AM and 8:00 PM to 10:00 PM");
     expect(html).not.toMatch(/Sunday|closed|data-placeholder/i);
   });
 
   it("Nahar keeps its Sunday appointment note", () => {
     const html = renderToStaticMarkup(createElement(Timings, { loc: LOCATIONS.nahar }));
-    expect(html).toContain("Sunday: By appointment only, 11:00 am to 1:00 pm");
+    expect(html).toContain("Sunday: 11:00 AM to 1:00 PM, by appointment only");
   });
 
   it("no TODO(confirm) markers remain", () => {
