@@ -45,11 +45,14 @@ describe("locations (single source of truth)", () => {
     expect([LOCATIONS.powai.lat, LOCATIONS.powai.lng]).toEqual([19.1240698, 72.9164363]);
   });
 
-  it("Pancholi has no coordinates, map link or embed yet (owner: map embeds come later, nothing invented)", () => {
+  it("Pancholi has no coordinates or short map link; its embed and directions use the address as the query", () => {
+    const addr = LOCATIONS.pancholi.address.oneLine;
     expect([LOCATIONS.pancholi.lat, LOCATIONS.pancholi.lng]).toEqual([undefined, undefined]);
     expect(LOCATIONS.pancholi.mapsUrl).toBeUndefined();
     expect(LOCATIONS.pancholi.mapsEmbedSrc).toBeUndefined();
-    expect(directionsLink(LOCATIONS.pancholi)).toBeNull();
+    expect(MAP.embedUrl(LOCATIONS.pancholi)).toBe(`https://www.google.com/maps?q=${encodeURIComponent(addr)}&output=embed`);
+    expect(directionsLink(LOCATIONS.pancholi)).toBe(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(addr)}`);
+    expect(new URL(directionsLink(LOCATIONS.pancholi)).searchParams.get("destination")).toBe(addr);
   });
 
   it("Get Directions is a coordinate-based directions link, no API key, never empty; only for locations with coordinates", () => {
@@ -63,6 +66,7 @@ describe("locations (single source of truth)", () => {
       expect(u.searchParams.has("key")).toBe(false);
     }
     expect(withCoords.map((l) => l.slug)).toEqual(["main", "powai", "nahar"]);
+    expect(ALL_LOCATIONS.every((l) => directionsLink(l).startsWith("https://www.google.com/maps/dir/?api=1&destination="))).toBe(true);
     expect(new Set(withCoords.map(directionsLink)).size).toBe(3);
   });
 

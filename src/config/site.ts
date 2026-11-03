@@ -233,9 +233,10 @@ export const BRANCHES: Location[] = [LOCATIONS.pancholi, LOCATIONS.powai, LOCATI
 export const ALL_LOCATIONS: Location[] = [LOCATIONS.main, ...BRANCHES];
 
 /** Get Directions: coordinate-based Google Maps directions link (one helper, no API key). */
-export function directionsLink(loc: Location): string | null {
-  if (loc.lat === undefined || loc.lng === undefined) return null;
-  return `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}`;
+export function directionsLink(loc: Location): string {
+  if (loc.lat !== undefined && loc.lng !== undefined) return `https://www.google.com/maps/dir/?api=1&destination=${loc.lat},${loc.lng}`;
+  // No coordinates yet (Pancholi): address-based directions, owner-approved.
+  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(loc.address.oneLine)}`;
 }
 
 export const MAP = {

@@ -5,7 +5,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import ContactPage from "@/app/contact/page";
 import { CopyEmailButton } from "@/components/CopyEmailButton";
-import { ALL_LOCATIONS, directionsLink, EMAIL, EMAIL_SUBJECT, mailtoHref, mailtoLink, LOCATIONS, PHONE } from "@/config/site";
+import { ALL_LOCATIONS, directionsLink, EMAIL, EMAIL_SUBJECT, mailtoHref, mailtoLink, LOCATIONS, MAP, PHONE } from "@/config/site";
 
 const walk = (dir: string): string[] =>
   fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir, e.name)]));
@@ -93,10 +93,12 @@ describe("booking actions only on the Kanjurmarg clinic card", () => {
 describe("Google Maps wiring on Contact", () => {
   const decode = (v: string) => v.replace(/&amp;/g, "&").replace(/&#x27;/g, "'").replace(/&quot;/g, '"');
 
-  it("renders 3 lazy iframes with the real embed src, a title and referrerPolicy", () => {
+  it("renders 4 lazy iframes (Kanjurmarg, Pancholi, Powai, Nahar), each 250px tall, with a title and referrerPolicy", () => {
     const tags = [...html.matchAll(/<iframe\b[^>]*>/g)].map((m) => m[0]);
-    expect(tags).toHaveLength(3);
-    expect(tags.map((t) => decode(/ src="([^"]*)"/.exec(t)![1]))).toEqual(ALL_LOCATIONS.filter((l) => l.mapsEmbedSrc).map((l) => l.mapsEmbedSrc));
+    expect(tags).toHaveLength(4);
+    expect(tags.map((t) => decode(/ src="([^"]*)"/.exec(t)![1]))).toEqual(ALL_LOCATIONS.map((l) => MAP.embedUrl(l)));
+    expect(html.match(/h-\[250px\]/g)).toHaveLength(4);
+    expect(decode(tags[1])).toContain("https://www.google.com/maps?q=90%20Feet%20Rd");
     for (const t of tags) {
       expect(t).toMatch(/ title="[^"]+"/);
       expect(t).toContain('loading="lazy"');
@@ -104,10 +106,10 @@ describe("Google Maps wiring on Contact", () => {
     }
   });
 
-  it("renders 3 Get Directions links (Pancholi has none yet) using the coordinate-based directions link", () => {
+  it("renders 4 Get Directions buttons: coordinate links for Kanjurmarg, Powai, Nahar; address link for Pancholi", () => {
     const anchors = [...html.matchAll(/<a\b[^>]*data-cta="directions"[^>]*>/g)].map((m) => m[0]);
-    expect(anchors).toHaveLength(3);
-    expect(anchors.map((a) => decode(/ href="([^"]*)"/.exec(a)![1]))).toEqual(ALL_LOCATIONS.map(directionsLink).filter((h): h is string => h !== null));
+    expect(anchors).toHaveLength(4);
+    expect(anchors.map((a) => decode(/ href="([^"]*)"/.exec(a)![1]))).toEqual(ALL_LOCATIONS.map(directionsLink));
     for (const a of anchors) expect(a).toContain('rel="noopener noreferrer"');
   });
 
@@ -115,8 +117,17 @@ describe("Google Maps wiring on Contact", () => {
     expect(pancholiSeg).toContain("Pancholi Hospital");
     expect(pancholiSeg).toContain("90 Feet Rd, Sudarshan Society, Garodia Nagar");
     expect(pancholiSeg).toContain("Monday to Saturday: 12:00 PM to 2:00 PM");
-    expect(pancholiSeg).not.toMatch(/tel:|wa\.me|<iframe|data-cta=|data-location-actions|Get Directions|Fee /);
+    expect(pancholiSeg).toContain("<iframe");
+    expect(pancholiSeg).toContain("Get Directions");
+    expect(pancholiSeg).not.toMatch(/tel:|wa\.me|data-cta="(call|whatsapp)"|Fee |fee/);
     expect(html.indexOf('data-location="pancholi"')).toBeLessThan(html.indexOf('data-location="powai"'));
     expect(html.indexOf('data-location="powai"')).toBeLessThan(html.indexOf('data-location="nahar"'));
+  });
+
+  it("fee text per card is exactly as live; Pancholi has no fee or distance line", () => {
+    expect(html).toContain("Consultation fee: ₹500 first visit, ₹300 follow-up.");
+    expect(html).toContain("Fee ₹500 · ~3 km from clinic");
+    expect(html).toContain("Fee ₹1,100 · ~6 km from clinic");
+    expect(pancholiSeg).not.toMatch(/\bFee\b|km from clinic/);
   });
 });
