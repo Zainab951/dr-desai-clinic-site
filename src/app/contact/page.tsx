@@ -24,7 +24,7 @@ export default function ContactPage() {
           <p className="mt-2 text-center text-lead text-body">Call or WhatsApp directly. Every enquiry goes straight to the clinic, no booking form or portal.</p>
 
           {/* MAIN CLINIC */}
-          <div className="fx-reveal mt-8 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]" data-location="main">
+          <div className="fx-reveal mt-8 grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]" data-location="main">
             <div className="rounded-[10px] border border-line bg-white p-5">
               <h2 className="mb-3 text-[18px] font-bold">{MAIN.name}</h2>
               <Address />
@@ -51,7 +51,7 @@ export default function ContactPage() {
 
           {/* OTHER LOCATIONS */}
           <h2 className="mt-10 text-[20px] font-bold">Also consults at</h2>
-          <ul className="fx-grid mt-4 grid gap-4 sm:grid-cols-2">
+          <ul className="fx-grid mt-4 grid items-start gap-4 sm:grid-cols-2">
             {BRANCHES.map((b, i) => (
               <li key={b.slug} className="fx-card flex flex-col overflow-hidden rounded-[10px] border border-line bg-white" data-location={b.slug}>
                 {b.mapsEmbedSrc && (
