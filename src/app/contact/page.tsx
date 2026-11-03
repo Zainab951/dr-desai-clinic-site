@@ -43,7 +43,7 @@ export default function ContactPage() {
               <LocationActions loc={MAIN} />
             </div>
             <div className="overflow-hidden rounded-[10px] border border-line bg-white">
-              <div className="relative h-[250px] w-full">
+              <div className="relative h-[260px] w-full overflow-hidden md:h-[320px]">
                 <iframe title={MAP.title} src={MAP.embedUrl(MAIN)} className="absolute inset-0 h-full w-full border-0" loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen />
               </div>
             </div>
@@ -55,7 +55,7 @@ export default function ContactPage() {
             {BRANCHES.map((b, i) => (
               <li key={b.slug} className="fx-card flex flex-col overflow-hidden rounded-[10px] border border-line bg-white" data-location={b.slug}>
                 {b.mapsEmbedSrc && (
-                  <div className="relative h-[250px] w-full">
+                  <div className="relative h-[260px] w-full overflow-hidden md:h-[320px]">
                     <iframe title={`Map showing ${b.name}, ${b.place}, Mumbai`} src={b.mapsEmbedSrc} className="absolute inset-0 h-full w-full border-0" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
                   </div>
                 )}

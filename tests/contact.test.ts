@@ -93,11 +93,11 @@ describe("booking actions only on the Kanjurmarg clinic card", () => {
 describe("Google Maps wiring on Contact", () => {
   const decode = (v: string) => v.replace(/&amp;/g, "&").replace(/&#x27;/g, "'").replace(/&quot;/g, '"');
 
-  it("renders 4 lazy iframes (Kanjurmarg, Pancholi, Powai, Nahar), each 250px tall, with a title and referrerPolicy", () => {
+  it("renders 4 lazy iframes (Kanjurmarg, Pancholi, Powai, Nahar), each 260px tall on phone and 320px from md, with a title and referrerPolicy", () => {
     const tags = [...html.matchAll(/<iframe\b[^>]*>/g)].map((m) => m[0]);
     expect(tags).toHaveLength(4);
     expect(tags.map((t) => decode(/ src="([^"]*)"/.exec(t)![1]))).toEqual(ALL_LOCATIONS.map((l) => MAP.embedUrl(l)));
-    expect(html.match(/h-\[250px\]/g)).toHaveLength(4);
+    expect(html.match(/h-\[260px\] w-full overflow-hidden md:h-\[320px\]/g)).toHaveLength(4);
     expect(decode(tags[1])).toContain("https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2911.539646226586");
     for (const t of tags) {
       expect(t).toMatch(/ title="[^"]+"/);
