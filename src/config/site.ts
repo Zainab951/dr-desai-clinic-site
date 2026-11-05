@@ -17,6 +17,9 @@ export const SITE = {
   locale: "en-IN",
 } as const;
 
+/** Google Analytics 4 measurement ID. Single source: the root layout reads it; no other file may hold the literal. */
+export const GA_MEASUREMENT_ID = "G-H699T8EXKC";
+
 /** Maharashtra Medical Council registration. Defined once; shown in header, Home, About; in Physician JSON-LD. */
 export const MMC = {
   council: "Maharashtra Medical Council",
